@@ -2,30 +2,39 @@ name: Reusable AWS OIDC Auth
 
 on:
   workflow_call:  # Key for reusability
-    inputs:
+    secrets:
       aws_role_arn:
         required: true
-        type: string
-      aws_region:
-        required: false
-        type: string
-        default: ap-southeast-2
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: false
-      AWS_SECRET_ACCESS_KEY:
-        required: false
+    # inputs:
+    #   aws_role_arn:
+    #     required: true
+    #     type: string
+    #   aws_region:
+    #     required: false
+    #     type: string
+    #     default: ap-southeast-2
+    # secrets:
+    #   AWS_ACCESS_KEY_ID:
+    #     required: false
+    #   AWS_SECRET_ACCESS_KEY:
+    #     required: false
 
 jobs:
-  assume_role:
+  auth:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ inputs.aws_role_arn }}
-          aws-region: ${{ inputs.aws_region }}
-          role-session-name: github-${{ github.run_id }}
+          role-to-assume: ${{ secrets.aws_role_arn }}  # ← Note the mapping
+  # assume_role:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: ${{ inputs.aws_role_arn }}
+  #         aws-region: ${{ inputs.aws_region }}
+  #         role-session-name: github-${{ github.run_id }}
 
-      - name: Verify Access
-        run: aws sts get-caller-identity
+  #     - name: Verify Access
+  #       run: aws sts get-caller-identity
