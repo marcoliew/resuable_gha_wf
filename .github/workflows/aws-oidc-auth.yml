@@ -5,14 +5,11 @@ on:
     secrets:
       aws_role_arn:
         required: true
-    # inputs:
-    #   aws_role_arn:
-    #     required: true
-    #     type: string
-    #   aws_region:
-    #     required: false
-    #     type: string
-    #     default: ap-southeast-2
+    inputs:
+      aws_region:
+        required: false
+        type: string
+        default: ap-southeast-2
     # secrets:
     #   AWS_ACCESS_KEY_ID:
     #     required: false
@@ -26,6 +23,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.aws_role_arn }}  # ← Note the mapping
+          aws-region: ${{ inputs.aws_region }}  # ← Reference with underscore
   # assume_role:
   #   runs-on: ubuntu-latest
   #   steps:
